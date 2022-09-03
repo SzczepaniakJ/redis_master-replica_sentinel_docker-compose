@@ -1,0 +1,80 @@
+services:
+ master:
+  image: redis:5.0
+  container_name: redis-master
+  restart: always
+  command: redis-server /etc/redis-config/redis-master.conf
+  ports:
+   - 6379:6379
+  volumes:
+   - ./data/master:/data
+   - ./config/redis-master:/etc/redis-config
+  networks:
+   default:
+    ipv4_address: 172.19.0.2
+ slave1:
+  image: redis:5.0
+  container_name: redis-slave-1
+  restart: always
+  command: redis-server /etc/redis-config/redis-slave-1.conf
+  ports:
+   - 6380:6379
+  volumes:
+   - ./data/slave:/data
+   - ./config/redis-slave:/etc/redis-config
+  networks:
+   default:
+    ipv4_address: 172.19.0.3
+ slave2:
+  image: redis:5.0
+  container_name: redis-slave-2
+  restart: always
+  command: redis-server /etc/redis-config/redis-slave-2.conf
+  ports:
+   - 6381:6379
+  volumes:
+   - ./data/slave2:/data
+   - ./config/redis-slave:/etc/redis-config
+  networks:
+   default:
+    ipv4_address: 172.19.0.4
+ sentinel1:
+  image: redis:5.0
+  container_name: redis-sentinel-1
+  restart: always
+  ports:
+   - 26379:26379
+  command: redis-server /etc/redis-config/redis-sentinel-1.conf --sentinel
+  volumes:
+   - ./config/redis-sentinel:/etc/redis-config
+  networks:
+   default:
+    ipv4_address: 172.19.0.5
+ sentinel2:
+  image: redis:5.0
+  container_name: redis-sentinel-2
+  restart: always
+  ports:
+   - 26380:26379
+  command: redis-server /etc/redis-config/redis-sentinel-2.conf --sentinel
+  volumes:
+   - ./config/redis-sentinel:/etc/redis-config
+  networks:
+   default:
+    ipv4_address: 172.19.0.6
+ sentinel3:
+  image: redis:5.0
+  container_name: redis-sentinel-3
+  ports:
+   - 26381:26379
+  command: redis-server /etc/redis-config/redis-sentinel-3.conf --sentinel
+  volumes:
+   - ./config/redis-sentinel:/etc/redis-config
+  networks:
+   default:
+    ipv4_address: 172.19.0.7
+networks:
+ default:
+  name: redis_net
+  external: true
+ 
